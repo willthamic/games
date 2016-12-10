@@ -5,11 +5,10 @@ var currentTick = 0;
 var food;
 
 function setup() {
-	createCanvas(640,480);
+	createCanvas(600,600);
 	snake = new Snake(0,0);
 	food = new Food();
 	food.update();
-	noStroke();
 }
 
 function draw() {
@@ -23,33 +22,48 @@ function draw() {
 }
 
 function keyPressed() {
-	if (keyCode === LEFT_ARROW) {
+	if (keyCode === LEFT_ARROW && snake.xVel == 0) {
 		snake.xVel = -1;
 		snake.yVel = 0;
-	} else if (keyCode === RIGHT_ARROW) {
+	} else if (keyCode === RIGHT_ARROW && snake.xVel == 0) {
 		snake.xVel = 1;
 		snake.yVel = 0;
-	} else if (keyCode === UP_ARROW) {
+	} else if (keyCode === UP_ARROW && snake.yVel == 0) {
 		snake.xVel = 0;
 		snake.yVel = -1;
-	} else if (keyCode === DOWN_ARROW) {
+	} else if (keyCode === DOWN_ARROW && snake.yVel == 0) {
 		snake.xVel = 0;
 		snake.yVel = 1;
 	}
 }
 
 var Snake = function (x,y) {
-	this.x = x;
-	this.y = y;
+	fill(255,255,255);
 	this.xVel = 0;
 	this.yVel = 0;
+	this.pieces = [[0,0]];
 	this.update = function () {
-		this.x = constrain(this.x + this.xVel*blockScale,0,width-blockScale);
-		this.y = constrain(this.y + this.yVel*blockScale,0,height-blockScale);
-		fill(255,255,255);
-		rect(this.x,this.y,blockScale,blockScale);
-		if (this.x == food.x && this.y == food.y) {
+		if (this.pieces[0][0] == food.x && this.pieces[0][1] == food.y) {
 			food.update();
+			this.pieces.push([0,0]);
+		}
+
+		for (var i = 1; i < this.pieces.length; i++) {
+			if (this.pieces[0][0] == this.pieces[i][0] && this.pieces[0][1] == this.pieces[i][1]) {
+				this.pieces = [[0,0]];
+				food.update();
+			}
+		}
+
+		this.pieces.unshift([
+			constrain(this.pieces[0][0] + this.xVel*blockScale,0,width-blockScale),
+			constrain(this.pieces[0][1] + this.yVel*blockScale,0,height-blockScale)
+			]);
+		this.pieces.pop();
+
+		fill(255);
+		for (var i = 0; i < this.pieces.length; i++) {
+			rect(this.pieces[i][0],this.pieces[i][1],blockScale,blockScale);
 		}
 	}
 }
@@ -66,6 +80,5 @@ var Food = function () {
 		this.y = floor(random(height/blockScale))*blockScale;
 		fill(200,50,50);
 		rect(this.x,this.y,blockScale,blockScale);
-		console.log(floor(random(width)/20)*20);
 	}
 }
