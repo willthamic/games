@@ -1,6 +1,6 @@
-var blockScale = 15;
+var blockScale = 20;
 var snake;
-var updateRate = 5;
+var updateRate = 8;
 var currentTick = 0;
 var food;
 
@@ -72,13 +72,13 @@ var Food = function () {
 	this.x;
 	this.y;
 	this.draw = function() {
-		fill(200,50,50);
+		fill(153, 204, 1);
 		rect(this.x,this.y,blockScale,blockScale);
 	}
 	this.update = function () {
 		this.x = floor(random(width/blockScale))*blockScale;
 		this.y = floor(random(height/blockScale))*blockScale;
-		fill(200,50,50);
+		fill(153, 204, 1);
 		rect(this.x,this.y,blockScale,blockScale);
 	}
 }
