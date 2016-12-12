@@ -3,6 +3,7 @@ var snake;
 var updateRate = 8;
 var currentTick = 0;
 var food;
+var flag;
 
 function setup() {
 	createCanvas(600,600);
@@ -17,23 +18,28 @@ function draw() {
 		background(75);
 		snake.update();
 		food.draw();
+		flag = false;
 	}
 	currentTick %= updateRate;
 }
 
 function keyPressed() {
-	if (keyCode === LEFT_ARROW && snake.xVel == 0) {
+	if (keyCode === LEFT_ARROW && snake.xVel == 0 && !flag) {
 		snake.xVel = -1;
 		snake.yVel = 0;
-	} else if (keyCode === RIGHT_ARROW && snake.xVel == 0) {
+		flag = true;
+	} else if (keyCode === RIGHT_ARROW && snake.xVel == 0 && !flag) {
 		snake.xVel = 1;
 		snake.yVel = 0;
-	} else if (keyCode === UP_ARROW && snake.yVel == 0) {
+		flag = true;
+	} else if (keyCode === UP_ARROW && snake.yVel == 0 && !flag) {
 		snake.xVel = 0;
 		snake.yVel = -1;
-	} else if (keyCode === DOWN_ARROW && snake.yVel == 0) {
+		flag = true;
+	} else if (keyCode === DOWN_ARROW && snake.yVel == 0 && !flag) {
 		snake.xVel = 0;
 		snake.yVel = 1;
+		flag = true;
 	}
 }
 
@@ -52,6 +58,8 @@ var Snake = function (x,y) {
 			if (this.pieces[0][0] == this.pieces[i][0] && this.pieces[0][1] == this.pieces[i][1]) {
 				this.pieces = [[0,0]];
 				food.update();
+				this.xVel = 0;
+				this.yVel = 0;
 			}
 		}
 
